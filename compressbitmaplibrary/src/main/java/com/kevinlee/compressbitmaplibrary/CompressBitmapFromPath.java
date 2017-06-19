@@ -62,6 +62,33 @@ public class CompressBitmapFromPath {
     }
 
     /**
+     * 根据需求宽高压缩图片
+     *
+     * @param path
+     * @param comWidth  压缩宽
+     * @param comHeight 压缩高
+     * @return
+     */
+    public Bitmap decodeSampledBitmapFromPath(String path, int comWidth, int comHeight) {
+
+        // 获取到图片的实际宽高
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 不加载到内存中
+        options.inJustDecodeBounds = true;
+        // options获得图片的实际宽高
+        BitmapFactory.decodeFile(path, options);
+        ImageSize imageSize = new ImageSize();
+        imageSize.setWidth(comWidth);
+        imageSize.setHeight(comHeight);
+        // 获取图片压缩比例
+        options.inSampleSize = getSampleSize(options, imageSize.getWidth(), imageSize.getHeight());
+        // 将图片加载到内存,并通过inSampleSize再次解析图片
+        options.inJustDecodeBounds = false;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        return bitmap;
+    }
+
+    /**
      * 根据图片的实际宽高与需求宽高获取到压缩比例
      *
      * @param options
